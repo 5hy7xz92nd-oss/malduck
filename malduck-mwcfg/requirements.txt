@@ -1,0 +1,17 @@
+# Combined requirements for Malduck + MWCFG
+
+# Malduck requirements
+click>=7.0
+pefile>=2022.5.30
+pyelftools
+pycryptodomex>=3.8.2
+capstone>=4.0.1
+yara-python
+typing-extensions>=4.0.0
+cryptography>=3.1
+dnfile>=0.15.0
+
+# MWCFG requirements
+flask>=2.0.0
+python-magic>=0.4.24
+pythonnet>=3.0.0

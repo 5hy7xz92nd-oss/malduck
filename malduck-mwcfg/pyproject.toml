@@ -1,0 +1,105 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "malduck-mwcfg"
+version = "1.0.0"
+description = "Combined Malduck malware analysis library with MWCFG configuration extraction tools"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "GPLv3 + BSD-3-Clause"}
+authors = [
+    {name = "CERT Polska", email = "info@cert.pl"},
+    {name = "c3rb3ru5d3d53c"}
+]
+maintainers = [
+    {name = "CERT Polska", email = "info@cert.pl"},
+    {name = "c3rb3ru5d3d53c"}
+]
+keywords = ["malware", "analysis", "configuration", "extraction", "forensics", "security"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology", 
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "click>=7.0",
+    "pefile>=2022.5.30",
+    "pyelftools",
+    "pycryptodomex>=3.8.2",
+    "capstone>=4.0.1",
+    "yara-python",
+    "typing-extensions>=4.0.0",
+    "cryptography>=3.1",
+    "dnfile>=0.15.0",
+    "flask>=2.0.0",
+    "python-magic>=0.4.24",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "black",
+    "isort",
+    "flake8",
+    "mypy",
+]
+docs = [
+    "sphinx>=4.0",
+    "sphinx-rtd-theme",
+]
+
+[project.urls]
+Homepage = "https://github.com/YOUR_USERNAME/malduck-mwcfg"
+Documentation = "https://malduck.readthedocs.io/"
+Repository = "https://github.com/YOUR_USERNAME/malduck-mwcfg.git"
+"Bug Tracker" = "https://github.com/YOUR_USERNAME/malduck-mwcfg/issues"
+
+[project.scripts]
+malduck = "malduck.main:main"
+mwcfg = "mwcfg:main"
+mwcfg-server = "mwcfg_server:main"
+
+[tool.setuptools]
+packages = ["malduck", "libmwcfg"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+malduck = ["py.typed"]
+libmwcfg = ["dnlib/*.dll"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311']
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
