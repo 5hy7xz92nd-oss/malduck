@@ -473,6 +473,62 @@ class ProcessMemory:
         idx = chunk.find(s)
         return chunk[:idx] if idx >= 0 else chunk
 
+    def read_all_bytes(self) -> bytes:
+        """
+        Read all mapped memory regions and concatenate them into a single bytes object.
+
+        Regions are concatenated in order without filling gaps between non-contiguous regions.
+
+        :return: All mapped memory regions concatenated
+        :rtype: bytes
+        """
+        if not self.regions:
+            return b""
+        return b"".join(
+            chunk for _, chunk in self.readv_regions(contiguous=False)
+        )
+
+    def fuse_all(self) -> "ProcessMemory":
+        """
+        Create a new :class:`ProcessMemory` by fusing all mapped regions into a single
+        contiguous buffer. Gaps between non-contiguous regions are filled with zeros.
+
+        The resulting object has a single region starting at the first mapped virtual
+        address and ending at the last mapped virtual address.
+
+        :return: New :class:`ProcessMemory` with all regions fused into one
+        :rtype: :class:`ProcessMemory`
+
+        Usage example:
+
+        .. code-block:: python
+
+            from malduck import procmem
+            from malduck.procmem import Region
+
+            payload = b"AAAA" + b"BBBB"
+            regions = [
+                Region(0x1000, 4, 0, 0, 0, 0),
+                Region(0x1200, 4, 0, 0, 0, 4),
+            ]
+            mem = procmem(payload, regions=regions)
+            fused = mem.fuse_all()
+            # fused spans 0x1000..0x1204 with gap between 0x1004 and 0x1200 filled with zeros
+            assert fused.readv(0x1000, 4) == b"AAAA"
+            assert fused.readv(0x1200, 4) == b"BBBB"
+        """
+        if not self.regions:
+            return ProcessMemory(b"", base=0)
+        first_addr = self.regions[0].addr
+        last_addr = self.regions[-1].end
+        total_size = last_addr - first_addr
+        buf = bytearray(total_size)
+        for region in self.regions:
+            data = self.readp(region.offset, region.size)
+            offset = region.addr - first_addr
+            buf[offset : offset + len(data)] = data
+        return ProcessMemory(bytes(buf), base=first_addr)
+
     def patchp(self, offset, buf):
         """
         Patch bytes under specified offset

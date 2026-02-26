@@ -40,6 +40,79 @@ def test_readv():
     assert p.readv(0x410ffe) == b"dd"
 
 
+def test_read_all_bytes():
+    payload = b"".join([
+        b"a" * 0x1000,
+        b"b" * 0x1000,
+        b"c" * 0x1000,
+        b"d" * 0x1000
+    ])
+    regions = [
+        Region(0x400000, 0x1000, 0, 0, 0, 0),
+        Region(0x401000, 0x1000, 0, 0, 0, 0x1000),
+        Region(0x402000, 0x1000, 0, 0, 0, 0x2000),
+        Region(0x410000, 0x1000, 0, 0, 0, 0x3000),
+    ]
+    p = procmem(payload, regions=regions)
+    # Regions 0x400000-0x402fff are contiguous; 0x410000 is separate
+    # read_all_bytes concatenates all region data without filling gaps
+    result = p.read_all_bytes()
+    assert isinstance(result, bytes)
+    assert result == b"a" * 0x1000 + b"b" * 0x1000 + b"c" * 0x1000 + b"d" * 0x1000
+
+    # Single region
+    p2 = procmem(b"hello", base=0x1000)
+    assert p2.read_all_bytes() == b"hello"
+
+    # Empty memory
+    p3 = procmem(b"", regions=[])
+    assert p3.read_all_bytes() == b""
+
+
+def test_fuse_all():
+    payload = b"".join([
+        b"a" * 0x1000,
+        b"b" * 0x1000,
+        b"c" * 0x1000,
+        b"d" * 0x1000
+    ])
+    regions = [
+        Region(0x400000, 0x1000, 0, 0, 0, 0),
+        Region(0x401000, 0x1000, 0, 0, 0, 0x1000),
+        Region(0x402000, 0x1000, 0, 0, 0, 0x2000),
+        Region(0x410000, 0x1000, 0, 0, 0, 0x3000),
+    ]
+    p = procmem(payload, regions=regions)
+    fused = p.fuse_all()
+
+    # Fused has a single region spanning 0x400000..0x411000
+    assert len(fused.regions) == 1
+    assert fused.imgbase == 0x400000
+    assert fused.regions[0].addr == 0x400000
+    assert fused.regions[0].end == 0x411000
+
+    # Original data is preserved
+    assert fused.readv(0x400000, 0x1000) == b"a" * 0x1000
+    assert fused.readv(0x401000, 0x1000) == b"b" * 0x1000
+    assert fused.readv(0x402000, 0x1000) == b"c" * 0x1000
+    assert fused.readv(0x410000, 0x1000) == b"d" * 0x1000
+
+    # Gap between 0x403000 and 0x410000 is filled with zeros
+    gap_size = 0x410000 - 0x403000
+    assert fused.readv(0x403000, gap_size) == b"\x00" * gap_size
+
+    # Single region (no gaps)
+    p2 = procmem(b"hello world", base=0x2000)
+    fused2 = p2.fuse_all()
+    assert len(fused2.regions) == 1
+    assert fused2.readv(0x2000, 11) == b"hello world"
+
+    # Empty memory
+    p3 = procmem(b"", regions=[])
+    fused3 = p3.fuse_all()
+    assert fused3.read_all_bytes() == b""
+
+
 def test_cuckoomem_dummy_dmp():
     with cuckoomem.from_file("tests/files/dummy.dmp") as p:
         assert len(p.regions) == 3
