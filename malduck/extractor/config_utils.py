@@ -53,7 +53,7 @@ def apply_config_part(
         if k not in config:
             config[k] = v
         elif k == "other":
-            # "others" is special field that can be extended like regular config
+            # "other" is special field that can be extended like regular config
             config[k] = apply_config_part(config.get("other", {}), v, "other.")
         elif config[k] == v:
             continue
