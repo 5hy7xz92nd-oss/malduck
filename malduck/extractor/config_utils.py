@@ -63,7 +63,7 @@ def apply_config_part(
                     config[k] = config[k] + [el]
         else:
             raise RuntimeError(
-                f"Extractor tries to override '{_prefix}{config[k]}' "
-                f"value of '{_prefix}{k}' with '{v}'"
+                f"Extractor tries to override value '{config[k]}' "
+                f"of '{_prefix}{k}' with '{v}'"
             )
     return config
