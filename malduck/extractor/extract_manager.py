@@ -293,6 +293,7 @@ class ExtractionContext:
                     except Exception as exc:
                         self.parent.on_error(exc, extractor)
 
+    def push_config(self, config: Config, extractor: Extractor, jsonable=True) -> None:
         log.info("The following matches were used: %s", list(used_matches))
         if not used_matches:
             log.warning("YARA rules didn't trigger any extractor! Is there a typo?")
@@ -309,13 +310,16 @@ class ExtractionContext:
         :type config: dict
         :param extractor: Extractor object reference
         :type extractor: :class:`malduck.extractor.Extractor`
+        :param jsonable: Try to decode 'bytes' as UTF-8 and check if config can be converted to JSON (default: True)
+        :type jsonable: bool
         """
-        config = encode_for_json(config)
-        try:
-            json.dumps(config)
-        except (TypeError, OverflowError) as e:
-            log.debug("Config is not JSON-encodable (%s): %s", str(e), repr(config))
-            raise RuntimeError("Config must be JSON-encodable")
+        if jsonable:
+            config = encode_for_json(config)
+            try:
+                json.dumps(config)
+            except (TypeError, OverflowError) as e:
+                log.debug("Config is not JSON-encodable (%s): %s", str(e), repr(config))
+                raise RuntimeError("Config must be JSON-encodable")
 
         config = sanitize_config(config)
 
