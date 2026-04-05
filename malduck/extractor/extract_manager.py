@@ -294,12 +294,11 @@ class ExtractionContext:
                     except Exception as exc:
                         self.parent.on_error(exc, extractor)
 
-    def push_config(self, config: Config, extractor: Extractor, jsonable=True) -> None:
         log.info("The following matches were used: %s", list(used_matches))
         if not used_matches:
             log.warning("YARA rules didn't trigger any extractor! Is there a typo?")
 
-    def push_config(self, config: Config, extractor: Extractor) -> None:
+    def push_config(self, config: Config, extractor: Extractor, jsonable=True) -> None:
         """
         Pushes new partial config
 
