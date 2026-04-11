@@ -3,6 +3,8 @@ from abc import ABCMeta, abstractmethod
 from hashlib import sha256
 from typing import Iterator, List, Optional, Type, TypeVar
 
+from typing_extensions import Self
+
 from .procmem import ProcessMemory, ProcessMemoryBuffer
 from .region import Region
 
@@ -19,7 +21,7 @@ class ProcessMemoryBinary(ProcessMemory, metaclass=ABCMeta):
     __magic__: Optional[bytes] = None
 
     def __init__(
-        self: T,
+        self,
         buf: ProcessMemoryBuffer,
         base: int = 0,
         regions: Optional[List[Region]] = None,
@@ -30,7 +32,7 @@ class ProcessMemoryBinary(ProcessMemory, metaclass=ABCMeta):
         if detect_image:
             image = self.is_image_loaded_as_memdump()
         self.is_image = image
-        self._image: Optional[T] = None
+        self._image: Optional[Self] = None
         if image:
             self._reload_as_image()
 
@@ -42,7 +44,7 @@ class ProcessMemoryBinary(ProcessMemory, metaclass=ABCMeta):
         raise NotImplementedError()
 
     @property
-    def image(self: T) -> Optional[T]:
+    def image(self) -> Optional[Self]:
         """
         Returns ProcessMemory object loaded with image=True or None if can't be loaded or is loaded as image yet
         """
@@ -50,7 +52,7 @@ class ProcessMemoryBinary(ProcessMemory, metaclass=ABCMeta):
             return None
         try:
             if not self._image:
-                self._image = self.__class__.from_memory(self, image=True)
+                self._image = self.from_memory(self, image=True)
             return self._image
         except Exception:
             import traceback
@@ -83,17 +85,12 @@ class ProcessMemoryBinary(ProcessMemory, metaclass=ABCMeta):
         if cls.__magic__ is None:
             raise NotImplementedError()
         for binary_va in procmem.findv(cls.__magic__):
-            binary_procmem_dmp = cls.from_memory(procmem, base=binary_va)
-
-            # Deduplicate procmems by the content hash
-            next_hash = sha256(binary_procmem_dmp.m).digest()
-            if next_hash in seen_hashes:
-                continue
-            seen_hashes.add(next_hash)
-
+            binary_procmem_dmp = cls.from_memory_slice(procmem, binary_va)
+            binary_procmem_img = binary_procmem_dmp.image
+            # Binaries must be yielded at the end as they may be
+            # released by caller after that
             if binary_procmem_dmp.is_valid():
                 yield binary_procmem_dmp
-            binary_procmem_img = binary_procmem_dmp.image
             if binary_procmem_img and binary_procmem_img.is_valid():
                 yield binary_procmem_img
 
