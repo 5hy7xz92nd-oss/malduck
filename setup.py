@@ -5,11 +5,14 @@ except ImportError:
 
 setup(
     name="malduck",
-    version="4.0.1",
+    version="4.4.1",
     description="Malduck is your ducky companion in malware analysis journeys",
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
     author="CERT Polska",
     author_email="info@cert.pl",
     packages=["malduck"],
+    package_data={"malduck": ["py.typed"]},
     entry_points={
         "console_scripts": [
             "malduck = malduck.main:main",
@@ -23,5 +26,5 @@ setup(
         "Programming Language :: Python :: 3",
         "Operating System :: POSIX :: Linux",
     ],
-    python_requires='>=3.6'
+    python_requires='>=3.8'
 )
