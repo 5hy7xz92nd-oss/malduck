@@ -2,6 +2,11 @@ from .match import RuleMatch, RuleOffsets, RulesetMatch, RulesetOffsets, StringM
 from .rules import YaraRule, YaraString, YaraStringType
 from .yara import Yara
 
+# Legacy aliases for backward compatibility
+YaraMatches = RulesetOffsets
+YaraMatch = RuleOffsets
+YaraStringMatch = StringMatch
+
 __all__ = [
     "YaraRule",
     "YaraString",
@@ -12,4 +17,7 @@ __all__ = [
     "RuleMatch",
     "RuleOffsets",
     "StringMatch",
+    "YaraMatches",
+    "YaraMatch",
+    "YaraStringMatch",
 ]
