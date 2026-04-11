@@ -1,14 +1,13 @@
 import logging
 import os
-from typing import Callable, Dict, Optional
+from typing import Dict, Optional
 
 import yara
 
-from .match import RulesetMatch, RulesetOffsets, StringMatch
+from .match import OffsetMapper, RulesetMatch, RulesetOffsets, StringMatch
 from .rules import YaraRule
 
 log = logging.getLogger(__name__)
-OffsetMapper = Callable[[Optional[int], Optional[int]], Optional[int]]
 
 
 class Yara:
@@ -52,8 +51,8 @@ class Yara:
 
     :param rule_paths: Dictionary of {"namespace": "rule_path"}. See also :py:meth:`Yara.from_dir`.
     :type rule_paths: dict
-    :param rules: Dictionary of {"namespace": YaraRule} object.
-    :type rules: dict
+    :param rules: List of YaraRule or string objects representing YARA rules.
+    :type rules: list
     :param compiled_rules: List of precompiled yara.Rules objects
     :type compiled_rules: list
     :param name: Name of generated rule (default: "r")
@@ -135,12 +134,12 @@ class Yara:
         :type filepath: str
         :param data: Data to be scanned
         :type data: str
-        :param offset_mapper: Offset mapping function. For unmapped region, should returned None.
+        :param offset_mapper: Offset mapping function. For unmapped region, should return None.
                               Used by :py:meth:`malduck.procmem.ProcessMemory.yarav`
         :type offset_mapper: function
         :param extended: Returns extended information about matched strings and rules
         :type extended: bool (optional, default False)
-        :rtype: :class:`malduck.yara.YaraRulesetOffsets` or :class:`malduck.yara.YaraRulesetMatches`
+        :rtype: :class:`malduck.yara.RulesetOffsets` or :class:`malduck.yara.RulesetMatch`
                 if extended is set to True
         """
         yara_matches = self.yara_match(**kwargs)

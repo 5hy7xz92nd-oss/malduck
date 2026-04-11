@@ -75,7 +75,7 @@ class UserMapping(Mapping[str, V]):
     def __getattr__(self, item: str) -> V:
         try:
             return self[item]
-        except IndexError:
+        except KeyError:
             raise AttributeError()
 
     def __iter__(self) -> Iterator[str]:

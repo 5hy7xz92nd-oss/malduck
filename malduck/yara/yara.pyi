@@ -10,7 +10,6 @@ OffsetMapper = Callable[[Optional[int], Optional[int]], Optional[int]]
 YaraRulesString = Tuple[int, str, bytes]
 
 class Yara:
-    rules: Any
     rulesets: List[yara.Rules]
 
     def __init__(
