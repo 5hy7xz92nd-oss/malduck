@@ -15,12 +15,12 @@ def rol(value: int, count: int, bits: int = 32) -> int:
 
     .. seealso::
 
-       :py:meth:`malduck.ints.IntType.rol`
+       :py:meth:`malduck.ints.FixedInt.rol`
 
     """
     count = (bits - 1) & count
-    value = (value << count) | ((2 ** count - 1) & (value >> (bits - count)))
-    return value % 2 ** bits
+    value = (value << count) | ((2**count - 1) & (value >> (bits - count)))
+    return value % 2**bits
 
 
 def ror(value: int, count: int, bits: int = 32) -> int:
@@ -33,7 +33,7 @@ def ror(value: int, count: int, bits: int = 32) -> int:
 
     .. seealso::
 
-       :py:meth:`malduck.ints.IntType.ror`
+       :py:meth:`malduck.ints.FixedInt.ror`
 
     """
     return rol(value, bits - count, bits)

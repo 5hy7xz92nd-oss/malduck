@@ -1,0 +1,118 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║         🦆 MALDUCK-MWCFG COMBINED REPOSITORY 🔧               ║
+║                                                               ║
+║   A unified malware analysis and configuration extraction    ║
+║   toolkit combining Malduck and MWCFG                        ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+📁 REPOSITORY STRUCTURE CREATED SUCCESSFULLY!
+
+✅ What's Ready:
+   • Complete project structure
+   • Combined README.md with documentation
+   • setup.py for unified installation
+   • requirements.txt with merged dependencies
+   • Makefile for build automation
+   • Contributing guidelines (CONTRIBUTING.md)
+   • Quick start guide (QUICKSTART.md)
+   • License information (LICENSE)
+   • Git ignore rules (.gitignore)
+   • Project configuration (pyproject.toml)
+   • CLI tools (mwcfg script)
+
+📋 Directory Layout:
+   malduck-mwcfg/
+   ├── README.md          ← Main documentation
+   ├── setup.py           ← Installation script
+   ├── requirements.txt   ← Dependencies
+   ├── Makefile           ← Build commands
+   ├── mwcfg              ← CLI tool
+   ├── malduck/           ← Core library (empty, needs copying)
+   ├── libmwcfg/          ← MWCFG lib (empty, needs copying)
+   ├── modules/           ← Extractors (empty, needs copying)
+   ├── tests/             ← Tests (empty, needs copying)
+   └── docs/              ← Documentation (empty, needs copying)
+
+⚠️  IMPORTANT: Next Steps Required!
+
+The structure is complete, but you need to populate it with source code:
+
+OPTION 1 - Automated (Recommended):
+   $ cd /workspaces/malduck/malduck-mwcfg
+   $ chmod +x copy_all.sh
+   $ ./copy_all.sh
+
+OPTION 2 - Manual:
+   Read COPY_INSTRUCTIONS.md for detailed steps
+
+After copying files:
+   $ pip install -e .
+   $ mwcfg --modules modules/ --list-modules
+   $ make test
+
+📖 Documentation Files:
+   • README.md           - Complete documentation
+   • QUICKSTART.md       - Quick start guide
+   • CONTRIBUTING.md     - How to contribute
+   • PROJECT_SUMMARY.md  - This project summary
+   • COPY_INSTRUCTIONS.md - How to copy files
+
+🚀 Quick Commands:
+   make install          # Install the package
+   make test             # Run tests
+   make mwcfg-server     # Build Docker server
+   make help             # Show all commands
+
+🔗 Useful Links:
+   • Malduck: https://github.com/CERT-Polska/malduck
+   • MWCFG: https://github.com/c3rb3ru5d3d53c/mwcfg
+   • Malduck Docs: https://malduck.readthedocs.io/
+   • MWCFG Website: https://mwcfg.info
+
+📝 Key Features Combined:
+   From Malduck:
+   ✓ Crypto (AES, Serpent, ChaCha20, etc.)
+   ✓ Compression (APLib, LZNT1, gzip)
+   ✓ Memory analysis (PE/ELF, dumps)
+   ✓ Extraction framework
+   
+   From MWCFG:
+   ✓ Modular extractors
+   ✓ CLI tool for batch extraction
+   ✓ Web server with API
+   ✓ Docker deployment
+   ✓ Karton integration
+
+🎯 What This Combines:
+   • Malduck v4.4.1 - Malware analysis library
+   • MWCFG v1.0.1 - Configuration extraction tool
+   • Unified as malduck-mwcfg v1.0.0
+
+📜 Licenses:
+   • Malduck: GPLv3 (CERT Polska)
+   • MWCFG: BSD-3-Clause (CERT Polska)
+
+💡 Getting Started:
+   1. Run: ./copy_all.sh
+   2. Install: pip install -e .
+   3. Test: mwcfg --modules modules/ --list-modules
+   4. Read: cat QUICKSTART.md
+
+📧 Support:
+   • GitHub Issues for bugs
+   • Check existing documentation
+   • Review example modules
+
+═══════════════════════════════════════════════════════════════
+
+Created by combining:
+• Malduck by CERT Polska
+• MWCFG by c3rb3ru5d3d53c (@c3rb3ru5d3d53c)
+
+Status: ⚠️  Repository structure ready - awaiting source copy
+
+Next: Run ./copy_all.sh to populate with source code
+
+═══════════════════════════════════════════════════════════════
